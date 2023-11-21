@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Definição de constantes para os jogadores e caracteres do jogo
+// Definição de constantes para os caracteres do jogo
 #define JOGADOR_X 'X'
 #define JOGADOR_O 'O'
 #define EMPATE 'E'
@@ -33,10 +33,10 @@ void exibirTabuleiro(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
 // Função para verificar se alguém ganhou
 char verificarGanhador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
     // Verifica linhas
-    for (int linha = 0; linha < QTD_LINHAS; linha++) {
+    for (int linha = 0; linha < QTD_LINHAS; linha++) { //loop que itera sobre as linhas do tabuleiro do jogo. A cada iteracao 'linha' e incrementado
         if (tabuleiro[linha][0] == tabuleiro[linha][1] && tabuleiro[linha][1] == tabuleiro[linha][2] &&
-            tabuleiro[linha][0] != CARACTERE_BRANCO)
-            return tabuleiro[linha][0];
+            tabuleiro[linha][0] != CARACTERE_BRANCO) // condição q verifica se os elementos em três posições consecutivas da mesma linha são iguais e diferentes de CARACTERE_BRANCO
+            return tabuleiro[linha][0]; //a função retorna o caractere que está na primeira coluna da linha onde ocorreu a vitória.
     }
 
     // Verifica colunas
@@ -58,55 +58,53 @@ char verificarGanhador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
 
 // Função para realizar a jogada do jogador
 void jogadaJogador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS], char jogador_atual) {
-    int linha, coluna;
+    int linha, coluna; //armazenarão a escolha da linha e coluna pelo jogador.
     int posicaoValida;
     int jogadaValida;
-
-    do {
+    
+    do {  //loop principal
         posicaoValida = 1;
         jogadaValida = 1;
-
+        
         do {
             printf("Informe a linha (0 a 2): ");
-            if (scanf("%d", &linha) != 1) {
-                printf("Jogada invalida. Escolha outra.\n");
+            if(scanf("%d", &linha) != 1){ //ler a entrada do jogador como um número inteiro e armazenar na variável linha.
+                printf("Jogada invalida. Escolha outra.\n"); //O if verifica se scanf não conseguiu ler exatamente um valor (retorna diferente de 1), o que indicaria uma entrada inválida.
                 jogadaValida = 0;
-                while (getchar() != '\n')
-                    ;
+                while(getchar() != '\n'); //Limpa o buffer de entrada para evitar problemas com entradas futuras.
             } else {
                 jogadaValida = 1;
             }
-        } while (jogadaValida == 0);
-
+        } while(jogadaValida == 0);
+            
         jogadaValida = 1;
-
+        
         do {
             printf("Informe a coluna (0 a 2): ");
-            if (scanf("%d", &coluna) != 1) {
+            if(scanf("%d", &coluna) != 1){
                 printf("Jogada invalida. Escolha outra.\n");
                 jogadaValida = 0;
-                while (getchar() != '\n')
-                    ;
+                while(getchar() != '\n');
             } else {
                 jogadaValida = 1;
             }
-        } while (jogadaValida == 0);
+        } while(jogadaValida == 0);
 
         // Verifica se a posição é válida
         if (tabuleiro[linha][coluna] != CARACTERE_BRANCO)
             printf("Posição já ocupada. Escolha outra.\n");
-        if (linha >= 3 || coluna >= 3) {
+        if(linha >= 3 || coluna >= 3){
             printf("Posição invalida. Escolha outra.\n");
             posicaoValida = 0;
         }
-
-    } while (tabuleiro[linha][coluna] != CARACTERE_BRANCO || posicaoValida == 0);
+        
+    } while (tabuleiro[linha][coluna] != CARACTERE_BRANCO || posicaoValida == 0); //continua executando caso a posicao seja invalida
 
     tabuleiro[linha][coluna] = jogador_atual;
 }
 
 // Função para realizar a jogada da máquina
-void jogadaMaquina(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
+void jogadaMaquina(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) { //gera aleatoriamente uma linha e coluna até encontrar uma posição válida no tabuleiro
     int linha, coluna;
 
     do {
@@ -120,13 +118,13 @@ void jogadaMaquina(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
 }
 
 // Função para exibir os créditos
-void creditos(void) {
+void creditos(void){
     printf("Esse jogo foi feito por Andre Vasconcelos, Gabriel Mendes, Victor madruga, Victor Di Mambro e Pedro Soares.");
     main();
 }
 
 // Função para iniciar o jogo
-void iniciarJogo(int modoJogo) {
+void iniciarJogo(int modoJogo){
     char resposta;
 
     int placarX = 0;
@@ -202,7 +200,7 @@ void iniciarJogo(int modoJogo) {
         // Pergunta se deseja jogar novamente
         printf("Deseja jogar novamente? (s/n): ");
         scanf(" %c", &resposta);
-    } while (resposta == 's' || resposta == 'S');
+    } while(resposta == 's' || resposta == 'S');
 
     // Retorna ao menu principal
     main();
@@ -227,25 +225,24 @@ int main() {
         do {
             // Solicita a opção ao usuário
             printf("Opção: ");
-            if (scanf("%d", &modoJogo) != 1) {
+            if(scanf("%d", &modoJogo) != 1){
                 printf("Opção invalida. Escolha outra.\n");
                 stringDigitada = 0;
-                while (getchar() != '\n')
-                    ;
+                while(getchar() != '\n');
             } else {
                 stringDigitada = 1;
             }
-        } while (stringDigitada == 0);
-
+        } while(stringDigitada == 0);
+    
         // Verifica se a opção é válida
-        if (modoJogo >= 5) {
+        if(modoJogo >= 5){
             printf("Opção invalida. Escolha outra.");
             opcaoValida = 0;
         }
-    } while (opcaoValida == 0);
+    } while(opcaoValida == 0);
 
     // Executa a opção escolhida
-    switch (modoJogo) {
+    switch (modoJogo){
         case 1:
             iniciarJogo(modoJogo);
             break;
@@ -253,7 +250,7 @@ int main() {
         case 2:
             iniciarJogo(modoJogo);
             break;
-
+        
         case 3:
             creditos();
             break;
