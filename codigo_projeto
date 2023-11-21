@@ -9,6 +9,8 @@
 #define QTD_LINHAS 3
 #define QTD_COLUNAS 3
 
+int main();
+
 // Função para inicializar o tabuleiro
 void inicializarTabuleiro(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
     for (int linha = 0; linha < QTD_LINHAS; linha++)
@@ -111,7 +113,8 @@ void jogadaMaquina(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
 }
 
 void creditos(void){
-    printf("epa");
+    printf("Esse jogo foi feito por Andre Vasconcelos, Gabriel Mendes, Victor madruga, Victor Di Mambro e Pedro Soares.");
+    main();
 }
 
 void iniciarJogo(int modoJogo){
@@ -183,6 +186,8 @@ void iniciarJogo(int modoJogo){
         printf("Deseja jogar novamente? (s/n): ");
         scanf(" %c", &resposta);
     }while(resposta == 's' || resposta == 'S');
+
+    main();
 }
 
 int main() {
@@ -195,6 +200,7 @@ int main() {
     printf("1. Dois jogadores\n");
     printf("2. Jogar contra a máquina\n");
     printf("3. Créditos\n");
+    printf("4. Sair\n");
 
     do{
         opcaoValida = 1;
@@ -209,7 +215,7 @@ int main() {
             }
         }while(stringDigitada == 0);
     
-        if(modoJogo >= 3){
+        if(modoJogo >= 5){
             printf("Opção invalida. Escolha outra.");
             opcaoValida = 0;
         }
@@ -226,6 +232,9 @@ int main() {
         
         case 3:
             creditos();
+            break;
+        case 4:
+            exit(0);
             break;
     
     }
