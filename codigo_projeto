@@ -1,0 +1,234 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define JOGADOR_X 'X'
+#define JOGADOR_O 'O'
+#define EMPATE 'E'
+#define CARACTERE_BRANCO '_'
+#define QTD_LINHAS 3
+#define QTD_COLUNAS 3
+
+// Função para inicializar o tabuleiro
+void inicializarTabuleiro(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
+    for (int linha = 0; linha < QTD_LINHAS; linha++)
+        for (int coluna = 0; coluna < QTD_COLUNAS; coluna++)
+            tabuleiro[linha][coluna] = CARACTERE_BRANCO;
+}
+
+// Função para exibir o tabuleiro
+void exibirTabuleiro(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
+    printf("\n");
+    for (int linha = 0; linha < QTD_LINHAS; linha++) {
+        for (int coluna = 0; coluna < QTD_COLUNAS; coluna++)
+            printf("%c ", tabuleiro[linha][coluna]);
+        printf("\n");
+    }
+}
+
+// Função para verificar se alguém ganhou
+char verificarGanhador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
+    for (int linha = 0; linha < QTD_LINHAS; linha++) {
+        if (tabuleiro[linha][0] == tabuleiro[linha][1] && tabuleiro[linha][1] == tabuleiro[linha][2] &&
+            tabuleiro[linha][0] != CARACTERE_BRANCO)
+            return tabuleiro[linha][0];
+    }
+
+    for (int coluna = 0; coluna < QTD_COLUNAS; coluna++) {
+        if (tabuleiro[0][coluna] == tabuleiro[1][coluna] && tabuleiro[1][coluna] == tabuleiro[2][coluna] &&
+            tabuleiro[0][coluna] != CARACTERE_BRANCO)
+            return tabuleiro[0][coluna];
+    }
+
+    if (tabuleiro[0][0] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][2] && tabuleiro[0][0] != CARACTERE_BRANCO)
+        return tabuleiro[0][0];
+
+    if (tabuleiro[0][2] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][0] && tabuleiro[0][2] != CARACTERE_BRANCO)
+        return tabuleiro[0][2];
+
+    return EMPATE;
+}
+
+// Função para realizar a jogada do jogador
+void jogadaJogador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS], char jogador_atual) {
+    int linha, coluna;
+    int posicaoValida;
+    int jogadaValida;
+    
+    do {
+        posicaoValida = 1;
+        jogadaValida = 1;
+        
+        do{
+            printf("Informe a linha (0 a 2): ");
+            if(scanf("%d", &linha) != 1){
+                printf("Jogada invalida. Escolha outra.\n");
+                jogadaValida = 0;
+                while(getchar() != '\n');
+            }else{
+                jogadaValida = 1;
+            }
+        }while(jogadaValida == 0);
+            
+        jogadaValida = 1;
+        
+        do{
+            printf("Informe a coluna (0 a 2): ");
+            if(scanf("%d", &coluna) != 1){
+                printf("Jogada invalida. Escolha outra.\n");
+                jogadaValida = 0;
+                while(getchar() != '\n');
+            }else{
+                jogadaValida = 1;
+            }
+        }while(jogadaValida == 0);
+        //////////////
+
+        if (tabuleiro[linha][coluna] != CARACTERE_BRANCO)
+            printf("Posição já ocupada. Escolha outra.\n");
+        if(linha >= 3 || coluna >= 3){
+            printf("Posição invalida. Escolha outra.\n");
+            posicaoValida = 0;
+        }
+        
+    } while (tabuleiro[linha][coluna] != CARACTERE_BRANCO || posicaoValida == 0);
+
+    tabuleiro[linha][coluna] = jogador_atual;
+}
+
+// Função para realizar a jogada da máquina
+void jogadaMaquina(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
+    int linha, coluna;
+
+    do {
+        linha = rand() % QTD_LINHAS;
+        coluna = rand() % QTD_COLUNAS;
+    } while (tabuleiro[linha][coluna] != CARACTERE_BRANCO);
+
+    printf("A máquina escolheu a linha %d e a coluna %d.\n", linha, coluna);
+
+    tabuleiro[linha][coluna] = JOGADOR_O;
+}
+
+void creditos(void){
+    printf("epa");
+}
+
+void iniciarJogo(int modoJogo){
+    char resposta;
+
+    int placarX = 0;
+    int placarO = 0;
+    int placarEmpate = 0;
+
+    do {
+        int linha;
+        int coluna;
+
+        int posicao;
+        int aux_posicao;
+
+        int jogada_valida;
+
+        int cont_jogadas = 0;
+
+        int tam_tabuleiro = QTD_LINHAS * QTD_COLUNAS;
+
+        char jogador_atual = JOGADOR_X;
+
+        char ganhador = EMPATE;
+
+        char tabuleiro[QTD_LINHAS][QTD_COLUNAS];
+
+        srand(time(NULL));
+
+        inicializarTabuleiro(tabuleiro);
+
+        while (1) {
+            printf("\n");
+
+            exibirTabuleiro(tabuleiro);
+
+            if (modoJogo == 1 || (modoJogo == 2 && jogador_atual == JOGADOR_X))
+                jogadaJogador(tabuleiro, jogador_atual);
+            else
+                jogadaMaquina(tabuleiro);
+
+            exibirTabuleiro(tabuleiro);
+            cont_jogadas++;
+
+            ganhador = verificarGanhador(tabuleiro);
+            if (ganhador != EMPATE || cont_jogadas == tam_tabuleiro)
+                break;
+
+            jogador_atual = (jogador_atual == JOGADOR_X) ? JOGADOR_O : JOGADOR_X;
+        }
+
+        if (ganhador != EMPATE)
+            printf("\nO jogador %c ganhou!\n", ganhador);
+        else
+            printf("\nEmpatou!\n");
+
+        // Atualizar o placar
+        if (ganhador == JOGADOR_X)
+            placarX++;
+        else if (ganhador == JOGADOR_O)
+            placarO++;
+        else
+            placarEmpate++;
+
+        // Exibir o placar
+        printf("Placar: X (%d) - O (%d) - Empates (%d)\n", placarX, placarO, placarEmpate);
+
+        printf("Deseja jogar novamente? (s/n): ");
+        scanf(" %c", &resposta);
+    }while(resposta == 's' || resposta == 'S');
+}
+
+int main() {
+    int modoJogo;
+
+    int opcaoValida;
+    int stringDigitada;
+
+    printf("Escolha o modo de jogo:\n");
+    printf("1. Dois jogadores\n");
+    printf("2. Jogar contra a máquina\n");
+    printf("3. Créditos\n");
+
+    do{
+        opcaoValida = 1;
+        do{
+            printf("Opção: ");
+            if(scanf("%d", &modoJogo) != 1){
+                printf("Opção invalida. Escolha outra.\n");
+                stringDigitada = 0;
+                while(getchar() != '\n');
+            }else{
+                stringDigitada = 1;
+            }
+        }while(stringDigitada == 0);
+    
+        if(modoJogo >= 3){
+            printf("Opção invalida. Escolha outra.");
+            opcaoValida = 0;
+        }
+    }while(opcaoValida == 0);
+
+    switch (modoJogo){
+        case 1:
+            iniciarJogo(modoJogo);
+            break;
+
+        case 2:
+            iniciarJogo(modoJogo);
+            break;
+        
+        case 3:
+            creditos();
+            break;
+    
+    }
+
+    return 0;
+}
