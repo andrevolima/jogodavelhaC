@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+// Definição de constantes para os caracteres do jogo
 #define JOGADOR_X 'X'
 #define JOGADOR_O 'O'
 #define EMPATE 'E'
@@ -9,6 +10,7 @@
 #define QTD_LINHAS 3
 #define QTD_COLUNAS 3
 
+// Protótipo da função principal
 int main();
 
 // Função para inicializar o tabuleiro
@@ -30,18 +32,21 @@ void exibirTabuleiro(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
 
 // Função para verificar se alguém ganhou
 char verificarGanhador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
+    // Verifica linhas
     for (int linha = 0; linha < QTD_LINHAS; linha++) {
         if (tabuleiro[linha][0] == tabuleiro[linha][1] && tabuleiro[linha][1] == tabuleiro[linha][2] &&
             tabuleiro[linha][0] != CARACTERE_BRANCO)
             return tabuleiro[linha][0];
     }
 
+    // Verifica colunas
     for (int coluna = 0; coluna < QTD_COLUNAS; coluna++) {
         if (tabuleiro[0][coluna] == tabuleiro[1][coluna] && tabuleiro[1][coluna] == tabuleiro[2][coluna] &&
             tabuleiro[0][coluna] != CARACTERE_BRANCO)
             return tabuleiro[0][coluna];
     }
 
+    // Verifica diagonais
     if (tabuleiro[0][0] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][2] && tabuleiro[0][0] != CARACTERE_BRANCO)
         return tabuleiro[0][0];
 
@@ -61,31 +66,31 @@ void jogadaJogador(char tabuleiro[QTD_LINHAS][QTD_COLUNAS], char jogador_atual) 
         posicaoValida = 1;
         jogadaValida = 1;
         
-        do{
+        do {
             printf("Informe a linha (0 a 2): ");
             if(scanf("%d", &linha) != 1){
                 printf("Jogada invalida. Escolha outra.\n");
                 jogadaValida = 0;
                 while(getchar() != '\n');
-            }else{
+            } else {
                 jogadaValida = 1;
             }
-        }while(jogadaValida == 0);
+        } while(jogadaValida == 0);
             
         jogadaValida = 1;
         
-        do{
+        do {
             printf("Informe a coluna (0 a 2): ");
             if(scanf("%d", &coluna) != 1){
                 printf("Jogada invalida. Escolha outra.\n");
                 jogadaValida = 0;
                 while(getchar() != '\n');
-            }else{
+            } else {
                 jogadaValida = 1;
             }
-        }while(jogadaValida == 0);
-        //////////////
+        } while(jogadaValida == 0);
 
+        // Verifica se a posição é válida
         if (tabuleiro[linha][coluna] != CARACTERE_BRANCO)
             printf("Posição já ocupada. Escolha outra.\n");
         if(linha >= 3 || coluna >= 3){
@@ -112,11 +117,13 @@ void jogadaMaquina(char tabuleiro[QTD_LINHAS][QTD_COLUNAS]) {
     tabuleiro[linha][coluna] = JOGADOR_O;
 }
 
+// Função para exibir os créditos
 void creditos(void){
     printf("Esse jogo foi feito por Andre Vasconcelos, Gabriel Mendes, Victor madruga, Victor Di Mambro e Pedro Soares.");
     main();
 }
 
+// Função para iniciar o jogo
 void iniciarJogo(int modoJogo){
     char resposta;
 
@@ -145,34 +152,41 @@ void iniciarJogo(int modoJogo){
 
         srand(time(NULL));
 
+        // Inicializa o tabuleiro
         inicializarTabuleiro(tabuleiro);
 
         while (1) {
             printf("\n");
 
+            // Exibe o tabuleiro
             exibirTabuleiro(tabuleiro);
 
+            // Realiza a jogada do jogador ou da máquina
             if (modoJogo == 1 || (modoJogo == 2 && jogador_atual == JOGADOR_X))
                 jogadaJogador(tabuleiro, jogador_atual);
             else
                 jogadaMaquina(tabuleiro);
 
+            // Exibe o tabuleiro após a jogada
             exibirTabuleiro(tabuleiro);
             cont_jogadas++;
 
+            // Verifica se há um ganhador ou empate
             ganhador = verificarGanhador(tabuleiro);
             if (ganhador != EMPATE || cont_jogadas == tam_tabuleiro)
                 break;
 
+            // Alterna entre os jogadores
             jogador_atual = (jogador_atual == JOGADOR_X) ? JOGADOR_O : JOGADOR_X;
         }
 
+        // Exibe o resultado da partida
         if (ganhador != EMPATE)
             printf("\nO jogador %c ganhou!\n", ganhador);
         else
             printf("\nEmpatou!\n");
 
-        // Atualizar o placar
+        // Atualiza o placar
         if (ganhador == JOGADOR_X)
             placarX++;
         else if (ganhador == JOGADOR_O)
@@ -180,47 +194,54 @@ void iniciarJogo(int modoJogo){
         else
             placarEmpate++;
 
-        // Exibir o placar
+        // Exibe o placar
         printf("Placar: X (%d) - O (%d) - Empates (%d)\n", placarX, placarO, placarEmpate);
 
+        // Pergunta se deseja jogar novamente
         printf("Deseja jogar novamente? (s/n): ");
         scanf(" %c", &resposta);
-    }while(resposta == 's' || resposta == 'S');
+    } while(resposta == 's' || resposta == 'S');
 
+    // Retorna ao menu principal
     main();
 }
 
+// Função principal
 int main() {
     int modoJogo;
 
     int opcaoValida;
     int stringDigitada;
 
+    // Exibe o menu principal
     printf("Escolha o modo de jogo:\n");
     printf("1. Dois jogadores\n");
     printf("2. Jogar contra a máquina\n");
     printf("3. Créditos\n");
     printf("4. Sair\n");
 
-    do{
+    do {
         opcaoValida = 1;
-        do{
+        do {
+            // Solicita a opção ao usuário
             printf("Opção: ");
             if(scanf("%d", &modoJogo) != 1){
                 printf("Opção invalida. Escolha outra.\n");
                 stringDigitada = 0;
                 while(getchar() != '\n');
-            }else{
+            } else {
                 stringDigitada = 1;
             }
-        }while(stringDigitada == 0);
+        } while(stringDigitada == 0);
     
+        // Verifica se a opção é válida
         if(modoJogo >= 5){
             printf("Opção invalida. Escolha outra.");
             opcaoValida = 0;
         }
-    }while(opcaoValida == 0);
+    } while(opcaoValida == 0);
 
+    // Executa a opção escolhida
     switch (modoJogo){
         case 1:
             iniciarJogo(modoJogo);
@@ -234,9 +255,9 @@ int main() {
             creditos();
             break;
         case 4:
+            // Sai do programa
             exit(0);
             break;
-    
     }
 
     return 0;
